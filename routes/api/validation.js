@@ -1,15 +1,24 @@
 const Joi = require('joi')
+// Joi.objectId = require('joi-objectId')(Joi)
+
+const { ValidInContact } = require('../../config/constanta')
 
 const schemaContact = Joi.object({
   name: Joi.string().alphanum().min(3).max(20).required(),
   email: Joi.string().email().required(),
-  phone: Joi.string().min(10).max(14).required(),
+  phone: Joi.string()
+    .min(ValidInContact.MIN)
+    .max(ValidInContact.MAX)
+    .required(),
+  isFavorite: Joi.boolean().optional(),
 })
 
-const pattern = '\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}'
+const schemaStatusContact = Joi.object({
+  isFavorite: Joi.boolean().required(),
+})
 
 const schemaContactId = Joi.object({
-  contactId: Joi.string().pattern(new RegExp(pattern)).required(),
+  contactId: Joi.string().required(),
 })
 
 const validate = async (schema, obj, res, next) => {
@@ -28,6 +37,10 @@ const validate = async (schema, obj, res, next) => {
 
 module.exports.validateContact = async (req, res, next) => {
   return await validate(schemaContact, req.body, res, next)
+}
+
+module.exports.validateStatusContact = async (req, res, next) => {
+  return await validate(schemaStatusContact, req.body, res, next)
 }
 
 module.exports.validateContactId = async (req, res, next) => {
