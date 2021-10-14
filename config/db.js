@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 require('dotenv').config()
 
 const uri = process.env.URL_DB
+console.log('uri', uri)
 const db = mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -20,11 +21,5 @@ process.on('SIGINT', async () => {
   console.log('Connection to DB closed')
   process.exit()
 })
-
-// client.connect((err) => {
-// const collection = client.db('test').collection('devices')
-// perform actions on the collection object
-// client.close()
-// })
 
 module.exports = db
