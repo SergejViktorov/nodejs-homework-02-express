@@ -67,8 +67,30 @@ const logout = async (req, res, next) => {
   return res.status(HttpCode.NO_CONTENT).json({ test: 'test' })
 }
 
+const current = async (req, res, next) => {
+  const { email } = req.body
+  const user = await Users.findByEmail(email)
+  if (!user) {
+    return res.status(HttpCode.UNAUTHORIZED).json({
+      status: 'error',
+      code: HttpCode.UNAUTHORIZED,
+      message: 'Not authorized',
+    })
+  }
+  const subscription = user.subscription
+  return res.status(HttpCode.OK).json({
+    status: 'success',
+    code: HttpCode.OK,
+    date: {
+      email,
+      subscription,
+    },
+  })
+}
+
 module.exports = {
   registration,
   login,
   logout,
+  current,
 }
