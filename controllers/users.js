@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken')
+const path = require('path')
+const mkdirp = require('mkdirp')
 const Users = require('../repository/users')
+const UploadService = require('../services/file-upload')
 const { HttpCode } = require('../config/constants')
 require('dotenv').config()
 const SECRET_KEY = process.env.JVT_SECRET_KEY
@@ -29,6 +32,7 @@ const registration = async (req, res, next) => {
         name: newUser.name,
         email: newUser.email,
         subscription: newUser.subscription,
+        avatar: newUser.avatar,
       },
     })
   } catch (e) {
@@ -88,9 +92,29 @@ const current = async (req, res, next) => {
   })
 }
 
+const uploadAvatar = async (req, res, next) => {
+  const id = String(req.user._id)
+  const file = req.file
+  const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS
+  const destination = path.join(AVATAR_OF_USERS, id)
+  await mkdirp(destination)
+  const uploadService = new UploadService(destination)
+  const avatarUrl = await uploadService.save(file, id)
+  await Users.updateAvatar(id, avatarUrl)
+
+  return res.status(HttpCode.OK).json({
+    status: 'success',
+    code: HttpCode.OK,
+    date: {
+      avatar: avatarUrl,
+    },
+  })
+}
+
 module.exports = {
   registration,
   login,
   logout,
   current,
+  uploadAvatar,
 }
