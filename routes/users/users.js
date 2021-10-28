@@ -1,11 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const {
-  registration,
-  login,
-  logout,
-  current,
-  uploadAvatar,
+	registration,
+	login,
+	logout,
+	current,
+	uploadAvatar,
 } = require('../../controllers/users')
 const guard = require('../../helpers/guard')
 const loginLimit = require('../../helpers/rate-limit-login')
