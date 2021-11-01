@@ -40,7 +40,7 @@ const userSchema = new Schema(
 			},
 		},
 		isVerified: { type: Boolean, default: false },
-		veryfyToken: {
+		verifyToken: {
 			type: String,
 			required: true,
 			default: crypto.randomUUID(),
