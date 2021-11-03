@@ -22,21 +22,21 @@ app.use('/api/users', usersRouter)
 app.use('/api/contacts', contactsRouter)
 
 app.use((req, res) => {
-  res.status(404).json({ status: 'error', code: 404, message: 'Not found' })
+	res.status(404).json({ status: 'error', code: 404, message: 'Not found' })
 })
 
 app.use((err, req, res, next) => {
-  if (err.name === 'ValidationError') {
-    return res
-      .status(400)
-      .json({ status: 'fail', code: 400, message: err.message })
-  }
-  const statusCode = err.status || 500
-  res.status(statusCode).json({
-    status: statusCode === 500 ? 'fail' : 'error',
-    code: statusCode,
-    message: err.message,
-  })
+	if (err.name === 'ValidationError') {
+		return res
+			.status(400)
+			.json({ status: 'fail', code: 400, message: err.message })
+	}
+	const statusCode = err.status || 500
+	res.status(statusCode).json({
+		status: statusCode === 500 ? 'fail' : 'error',
+		code: statusCode,
+		message: err.message,
+	})
 })
 
 module.exports = app
